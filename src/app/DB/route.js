@@ -1,46 +1,60 @@
 import { NextResponse } from "next/server";
-import {writeFile} from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import mongoose from "mongoose";
-import { type } from "os";
 
-export  async function POST (req){
 
-    await mongoose.connect("mongodb+srv://nishantadvani724:oymh3tn0HEgnzOBP@cluster0.3yqlu.mongodb.net/Company?retryWrites=true&w=majority&appName=Cluster0");
-    const schema=new mongoose.Schema({
-        ImageName:{
-            type:String
-        }
-    })
-    const product=mongoose.models.image || mongoose.model("image",schema);
-    const data=await req.formData();
-    const file=data.get("file");
+let isConnected = false;
+async function connectToDatabase() {
+    if (isConnected) return;
+
+    await mongoose.connect("mongodb+srv://nishantadvani724:oymh3tn0HEgnzOBP@cluster0.3yqlu.mongodb.net/Company?retryWrites=true&w=majority&appName=Cluster0", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
     
-    if(!file){
-        return NextResponse.json({"error":"Your file not uploaded"});
-    }
-
-    const datas=await file.arrayBuffer();
-    const convert=Buffer.from(datas);
-    const path=`./public/${file.name}`;
-
-    const sendDatas=new product({ImageName:file.name});
-    const result = await sendDatas.save();
-
-    await writeFile(path,convert);
-
-
-    return NextResponse.json({success:"true"});
+    isConnected = true;
 }
 
-export async function GET(req){
-    await mongoose.connect("mongodb+srv://nishantadvani724:oymh3tn0HEgnzOBP@cluster0.3yqlu.mongodb.net/Company?retryWrites=true&w=majority&appName=Cluster0");
-    const schema=new mongoose.Schema({
-        ImageName:{
-            type:String
-        }
-    })
-    const product=mongoose.models.image || mongoose.model("image",schema);
-    const dataCome=await product.find({});
 
-    return NextResponse.json({data:dataCome});
+const ImageSchema = new mongoose.Schema({
+    ImageName: {
+        type: String,
+        required: true,
+    },
+});
+
+
+const ImageModel = mongoose.models.image || mongoose.model("image", ImageSchema);
+
+
+export async function POST(req) {
+    await connectToDatabase();
+
+    const data = await req.formData();
+    const file = data.get("file");
+
+    if (!file) {
+        return NextResponse.json({ error: "Your file was not uploaded" });
+    }
+
+    const fileBuffer = Buffer.from(await file.arrayBuffer());
+    const filePath = `./public/${file.name}`;
+
+    
+    const imageDocument = new ImageModel({ ImageName: file.name });
+    const result = await imageDocument.save();
+
+    await writeFile(filePath, fileBuffer);
+
+    return NextResponse.json({ success: true });
+}
+
+
+export async function GET(req) {
+    await connectToDatabase();
+
+    
+    const images = await ImageModel.find({}).select("ImageName").exec();
+
+    return NextResponse.json({ data: images });
 }
