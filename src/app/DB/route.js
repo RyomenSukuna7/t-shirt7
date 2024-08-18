@@ -6,56 +6,59 @@ if (!mongoose.connection.readyState) {
     mongoose.connect("mongodb+srv://nishantadvani724:oymh3tn0HEgnzOBP@cluster0.3yqlu.mongodb.net/Company?retryWrites=true&w=majority&appName=Cluster0", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-    }).then(() => console.log("Connected to MongoDB"))
-      .catch((error) => console.error("connection error:", error));
+    }).then(() => console.log("Connected to database"))
+      .catch((error) => console.error(" connection error:", error));
 }
 
 const schema = new mongoose.Schema({
     ImageName: {
-        type: String
+        type: String,
+        required: true,
     },
 });
 
 export async function POST(req) {
     try {
+        
+
         const product = mongoose.models.image || mongoose.model("image", schema);
         const data = await req.formData();
         const file = data.get("file");
 
         if (!file) {
-            return NextResponse.json({ "error": "No file uploaded" });
+            console.log("No file provided");
+            return NextResponse.json({ "error": "Your file was not uploaded" });
         }
 
+        const datas = await file.arrayBuffer();
+        const convert = Buffer.from(datas);
         const path = `./public/${file.name}`;
 
+        
         const sendDatas = new product({ ImageName: file.name });
-        await sendDatas.save();
-
-        process.nextTick(async () => {
-            try {
-                const fileBuffer = Buffer.from(await file.arrayBuffer());
-                await writeFile(path, fileBuffer);
-            } catch (err) {
-                console.error("Error writing file:", err);
-            }
-        });
+        const result = await sendDatas.save();
+       
 
         
-        return NextResponse.json({ success: true, message: "Upload initiated" });
+        await writeFile(path, convert);
+    
+
+        return NextResponse.json({ success: true });
     } catch (error) {
-        console.error("POST error:", error);
+        console.error("Error during POST request:", error);
         return NextResponse.json({ success: false, error: error.message });
     }
 }
 
 export async function GET(req) {
     try {
+
         const product = mongoose.models.image || mongoose.model("image", schema);
         const dataCome = await product.find({});
 
         return NextResponse.json({ data: dataCome });
     } catch (error) {
-        console.error("GET error:", error);
+        console.error("Error during GET request:", error);
         return NextResponse.json({ success: false, error: error.message });
     }
 }
