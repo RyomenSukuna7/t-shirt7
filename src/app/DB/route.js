@@ -3,14 +3,14 @@ import {writeFile} from 'fs/promises';
 import mongoose from "mongoose";
 import { type } from "os";
 
-export  async function POST (req){
-
-    await mongoose.connect(process.env.DBS);
-    const schema=new mongoose.Schema({
+mongoose.connect(process.env.DBS);
+const schema=new mongoose.Schema({
         ImageName:{
             type:String
         }
     })
+
+export  async function POST (req){
     const product=mongoose.models.image || mongoose.model("image",schema);
     const data=await req.formData();
     const file=data.get("file");
@@ -33,12 +33,6 @@ export  async function POST (req){
 }
 
 export async function GET(req){
-    await mongoose.connect(process.env.DBS);
-    const schema=new mongoose.Schema({
-        ImageName:{
-            type:String
-        }
-    })
     const product=mongoose.models.image || mongoose.model("image",schema);
     const dataCome=await product.find({});
 
