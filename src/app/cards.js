@@ -11,7 +11,7 @@ export default function Cards(){
 
     useEffect(()=>{
       async function datas(){
-        const data=await fetch("https://threadsymphony315.vercel.app/DB");
+        const data=await fetch("/DB");
         const res=await data.json();
         setImage(res.data);
       }
