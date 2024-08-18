@@ -3,7 +3,7 @@ import { writeFile } from 'fs/promises';
 import mongoose from "mongoose";
 
 if (!mongoose.connection.readyState) {
-    mongoose.connect(process.env.DBS, {
+    mongoose.connect("mongodb+srv://nishantadvani724:oymh3tn0HEgnzOBP@cluster0.3yqlu.mongodb.net/Company?retryWrites=true&w=majority&appName=Cluster0", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     }).then(() => console.log("Connected to MongoDB"))
