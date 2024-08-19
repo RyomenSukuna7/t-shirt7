@@ -22,6 +22,7 @@ export default function CardGamePad(){
   
   return(
     <>
+    <h1>hello world</h1>
       <Grid container> 
       <Suspense fallback={<Loading/>}>
       {images.map((imagess, index) => {
