@@ -19,7 +19,6 @@ async function connectToDatabase() {
 const ImageSchema = new mongoose.Schema({
     ImageName: {
         type: String,
-        required: true,
     },
 });
 
