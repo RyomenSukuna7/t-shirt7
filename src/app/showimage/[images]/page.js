@@ -11,7 +11,7 @@ export default function ShowImage({params}){
 
 
             <button onClick={()=>window.history.back()}>Back</button>
-            <h3 style={{color:"red",display:"flex",justifyContent:"center"}}>The Price are not fix. The price depends on design</h3>
+            <h3 style={{color:"red",display:"flex",justifyContent:"center"}}>The prices are not fixed they depend on the design.</h3>
             {take.map((n,index)=>(
                
                 params.images==n.nid?(
