@@ -45,7 +45,7 @@ export async function POST(req) {
 
     await writeFile(filePath, fileBuffer);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: "true" });
 }
 
 
