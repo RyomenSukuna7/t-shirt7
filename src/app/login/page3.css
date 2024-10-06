@@ -1,0 +1,10 @@
+body{
+    background-color: black;
+}
+#coming{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 22vh;
+    flex-wrap: wrap;
+}
