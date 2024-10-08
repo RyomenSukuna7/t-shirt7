@@ -15,7 +15,7 @@ export default function Main(){
         tm.from("nav ul li",{
             y:-100,
             opacity:0,
-            duration:2,
+            duration:1,
             stagger:0.1
         })
 
