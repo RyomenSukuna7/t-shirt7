@@ -25,6 +25,7 @@ export default function Message() {
         DM your custom design . <span style={{color:"red"}}>{typeEffect}</span>
         </span>
       </Link>
+        <br/>
       <Link href="https://www.instagram.com/threadsymphony7/" style={{ display: "flex", justifyContent: "center", backgroundColor: "transparent", color: "white", padding: "10px 10px",position:"absolute",top:"20%" ,left:"20%"}}>
         Click to order
       </Link>
